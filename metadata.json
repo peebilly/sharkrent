@@ -1,0 +1,6 @@
+{
+  "name": "POS Food & Car Rental System",
+  "description": "A robust Point of Sale (POS) system for premium car rental services, integrated with Google & Email Firebase Authentication, live cart calculation, and billing synced to Firestore collection 'rent car'.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

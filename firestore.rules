@@ -1,0 +1,124 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable, hardened global helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Match all collections dynamially to handle spaces/special characters elegantly
+    match /{collectionName}/{orderId} {
+      // Secure list query and get document
+      allow read: if collectionName == "rent car"
+        && isSignedIn()
+        && (resource == null || resource.data.userId == request.auth.uid);
+
+      // Create rule with strict type checking and owner identity verification
+      allow create: if collectionName == "rent car"
+        && isSignedIn()
+        && incoming().userId == request.auth.uid
+        && (
+          // Case 1: Order document
+          (
+            (!incoming().keys().hasAll(['type']) || incoming().type == "order")
+            && incoming().items is string
+            && incoming().items.size() <= 10000
+            && incoming().totalAmount is number
+            && incoming().totalAmount >= 0
+            && incoming().paymentMethod is string
+            && incoming().paymentMethod.size() <= 50
+            && incoming().status is string
+            && incoming().status.size() <= 50
+            && incoming().createdAt is string
+            && incoming().createdAt.size() <= 100
+            && (!incoming().keys().hasAll(['customerName']) || (incoming().customerName is string && incoming().customerName.size() <= 200))
+          )
+          ||
+          // Case 2: Product document
+          (
+            incoming().type == "product"
+            && incoming().title is string
+            && incoming().title.size() <= 200
+            && incoming().price is number
+            && incoming().price >= 0
+            && incoming().unit is string
+            && incoming().unit.size() <= 50
+            && incoming().detail is string
+            && incoming().detail.size() <= 1000
+            && incoming().image is string
+            && incoming().image.size() <= 1000
+            && incoming().status is string
+            && incoming().status.size() <= 50
+            && incoming().createdAt is string
+            && incoming().createdAt.size() <= 100
+            && (!incoming().keys().hasAll(['engine']) || (incoming().engine is string && incoming().engine.size() <= 20))
+            && (!incoming().keys().hasAll(['brakes']) || (incoming().brakes is string && incoming().brakes.size() <= 20))
+            && (!incoming().keys().hasAll(['transmission']) || (incoming().transmission is string && incoming().transmission.size() <= 20))
+            && (!incoming().keys().hasAll(['armor']) || (incoming().armor is string && incoming().armor.size() <= 20))
+            && (!incoming().keys().hasAll(['turbo']) || (incoming().turbo is string && incoming().turbo.size() <= 20))
+            && (!incoming().keys().hasAll(['licensePlate']) || (incoming().licensePlate is string && incoming().licensePlate.size() <= 50))
+          )
+        );
+
+      // Update validation - prevents tampering with createdAt, user email or userID
+      allow update: if collectionName == "rent car"
+        && isSignedIn()
+        && (existing().userId == request.auth.uid || !existing().keys().hasAll(['userId']))
+        && incoming().userId == request.auth.uid
+        && (
+          // Case 1: Order
+          (
+            (!existing().keys().hasAll(['type']) || existing().type == "order")
+            && incoming().items is string
+            && incoming().totalAmount is number
+            && (!incoming().keys().hasAll(['customerName']) || (incoming().customerName is string && incoming().customerName.size() <= 200))
+            && (
+              incoming().diff(existing()).affectedKeys().hasOnly(['status', 'paymentMethod', 'items', 'totalAmount', 'type', 'createdAt', 'userId', 'userEmail', 'customerName'])
+            )
+          )
+          ||
+          // Case 2: Product
+          (
+            (!existing().keys().hasAll(['type']) || existing().type == "product")
+            && incoming().title is string
+            && incoming().price is number
+            && incoming().price >= 0
+            && incoming().unit is string
+            && incoming().detail is string
+            && incoming().image is string
+            && incoming().status is string
+            && (!incoming().keys().hasAll(['licensePlate']) || (incoming().licensePlate is string && incoming().licensePlate.size() <= 50))
+            && (
+              incoming().diff(existing()).affectedKeys().hasOnly(['title', 'price', 'unit', 'detail', 'image', 'status', 'type', 'engine', 'brakes', 'transmission', 'armor', 'turbo', 'createdAt', 'userId', 'userEmail', 'licensePlate'])
+            )
+          )
+        );
+
+      // Only the order/product owner can delete their record
+      allow delete: if collectionName == "rent car"
+        && isSignedIn()
+        && existing().userId == request.auth.uid;
+    }
+  }
+}

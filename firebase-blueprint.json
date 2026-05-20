@@ -1,0 +1,47 @@
+{
+  "entities": {
+    "RentCarOrder": {
+      "title": "Rent Car Order",
+      "description": "An order representing a POS check-out transaction in rent car collection",
+      "type": "object",
+      "properties": {
+        "userEmail": {
+          "type": "string",
+          "description": "Email of the logged in user who placed the order"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Authentication ID of the user"
+        },
+        "items": {
+          "type": "string",
+          "description": "JSON string representing list of purchased or rented items to prevent complex nesting check in rules"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total checkout price in THB - Thai Baht"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment option: Cash, Debit card, or QR"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the transaction was completed"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of order (completed, pending, active_rental)"
+        }
+      },
+      "required": ["userEmail", "userId", "items", "totalAmount", "paymentMethod", "createdAt", "status"]
+    }
+  },
+  "firestore": {
+    "rent car/{orderId}": {
+      "schema": "RentCarOrder",
+      "description": "The car rental POS orders, including selected food items and packages"
+    }
+  }
+}

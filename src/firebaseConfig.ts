@@ -1,0 +1,11 @@
+export const firebaseConfig = {
+  apiKey: "AIzaSyDKSdlwdPw42e8doQh9rfd7LA7rNboxGmM",
+  authDomain: "rent-car-4fe00.firebaseapp.com",
+  projectId: "rent-car-4fe00",
+  storageBucket: "rent-car-4fe00.firebasestorage.app",
+  messagingSenderId: "604134524693",
+  appId: "1:604134524693:web:64b2ad3d96a6753a988b1c",
+  measurementId: "G-J3S1T3JBSM"
+};
+
+export default firebaseConfig;
