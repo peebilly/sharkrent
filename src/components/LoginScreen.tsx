@@ -83,7 +83,7 @@ export function LoginScreen({ onDemoLogin }: LoginScreenProps) {
     <div className="min-h-screen flex bg-[#020408] font-sans text-slate-200" id="login-screen-root">
       {/* Visual Banner Left Side (Desktop Only) */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-tr from-[#0a101f] via-[#05070a] to-[#0f172a] relative overflow-hidden flex-col justify-between p-12 text-white border-r border-white/10">
-        <div className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1546069901-558a3a17e02f?q=80&w=1200')" }} />
+        <div className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200')" }} />
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px]" />
         <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px]" />
         
@@ -101,10 +101,10 @@ export function LoginScreen({ onDemoLogin }: LoginScreenProps) {
         <div className="relative z-10 my-auto pr-8">
           <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight mb-6 tracking-tight text-white">
             นวัตกรรมระบบ POS <br />
-            สลัดเพื่อสุขภาพ <span className="text-blue-400">&</span> เช่ารถหรู
+            จัดการระบบเช่ารถหรูพรีเมียม
           </h1>
           <p className="text-base text-slate-400 mb-8 max-w-lg leading-relaxed">
-            จัดการรายการอาหารสุขภาพ กาแฟหอมกรุ่น และ บริการจองรถยนต์ส่วนบุคคลระดับพรีเมียม 
+            ระบบจัดการบริการจองรถยนต์และพาหนะเช่าส่วนบุคคลระดับพรีเมียม 
             จัดเก็บลงสู่ฐานข้อมูลหลัก Firestore พร้อมโครงสร้างความปลอดภัย Rules แข็งแกร่ง
           </p>
           <div className="grid grid-cols-2 gap-4">
@@ -121,7 +121,7 @@ export function LoginScreen({ onDemoLogin }: LoginScreenProps) {
 
         {/* Footer info */}
         <div className="relative z-10 text-slate-500 text-xs font-mono">
-          © 2026 rent-car-4fe00 / POS Food & Car Rental Co.
+          © 2026 rent-car-4fe00 / POS Car Rental Co.
         </div>
       </div>
 
